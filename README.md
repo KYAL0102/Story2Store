@@ -1,2 +1,2 @@
-# Story2Store
+# StoryInteract
 A game-website for interactive stories
