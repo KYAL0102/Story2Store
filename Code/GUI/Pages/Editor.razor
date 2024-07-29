@@ -1,0 +1,20 @@
+﻿@using GUI.Components
+
+@page "/Editor"
+
+<MudContainer Style="height: 100%; width: 100%; padding: 0; margin: 0" Fixed="true">
+    <MudGrid Style="height: 100%;">
+        <MudItem xs="8" Style="height: 100%; max-height: 100vh; overflow-y: scroll; overflow-x: hidden">
+            <TextEditor></TextEditor>
+            <!--<div style="background-color: lightblue; height: 100%;">
+                Item 1
+            </div>-->
+        </MudItem>
+        <MudItem xs="4" Style="height: 100%;">
+            <!--<OptionEditor></OptionEditor>-->
+            <div style="background-color: lightcoral; height: 100%;">
+                Item 2
+            </div>
+        </MudItem>
+    </MudGrid>
+</MudContainer>

@@ -1,0 +1,82 @@
+﻿@using GUI.Entites
+
+<MudTextField T="string" Variant="Variant.Outlined" Label="Title of your story" Class="mb-4"/>
+
+<MudContainer Class="pa-0">
+    @foreach (TextGuid component in _textComponents)
+    {
+        <MudContainer Class="pa-0 d-flex flex-row flex-grow-1">
+            <MudContainer Class="pa-0 d-flex flex-column justify-content-center" Style="width: fit-content">
+                <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.ArrowUpward" Disabled="@IsFirstItem(component)" OnClick="() => MoveItemUp(component)" Color="Color.Primary"/>
+                <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.ArrowDownward" Disabled="@IsLastItem(component)" OnClick="() => MoveItemDown(component)" Color="Color.Primary"/>
+            </MudContainer>
+            <MudContainer Class="pa-0 d-flex flex-grow-1 align-content-center">
+                @switch (component.TextComponent)
+                {
+                    case TextComponent.TextField:
+                        <MudTextField @bind-Value="_textFieldValues[component.Guid]" Variant="Variant.Filled" AutoGrow ShrinkLabel Label="Write your story here"
+                                      Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Delete" OnAdornmentClick="() => OnDeleteTextField(component)"/>
+                        break;
+                    case TextComponent.TextOption:
+                        <MudButton Variant="Variant.Filled" Color="Color.Secondary">
+                            Option
+                        </MudButton>
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => OnDeleteTextField(component)">Remove</MudIconButton>
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            </MudContainer>
+        </MudContainer>
+        <br/>
+    }
+</MudContainer>
+
+<MudDivider Style="height: 2px" Class="ma-4"/>
+
+<MudContainer>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="() => OnAddButtonClick(TextComponent.TextField)">Add Text</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="() => OnAddButtonClick(TextComponent.TextOption)">Add Option</MudButton>
+</MudContainer>
+
+@code {
+    private List<TextGuid> _textComponents = new();
+    private Dictionary<Guid, string> _textFieldValues = new();
+
+    private bool IsFirstItem(TextGuid item) => _textComponents.IndexOf(item) == 0;
+    private bool IsLastItem(TextGuid item) => _textComponents.IndexOf(item) == _textComponents.Count - 1;
+
+    private void OnAddButtonClick(TextComponent component)
+    {
+        var id = new TextGuid
+        {
+            TextComponent = component
+        };
+        _textComponents.Add(id);
+        _textFieldValues.Add(id.Guid, string.Empty);
+    }
+
+    private void OnDeleteTextField(TextGuid id)
+    {
+        _textComponents.Remove(id);
+        _textFieldValues.Remove(id.Guid);
+    }
+
+    private void MoveItemUp(TextGuid item)
+    {
+        var index = _textComponents.IndexOf(item);
+        if (index > 0)
+        {
+            (_textComponents[index - 1], _textComponents[index]) = (_textComponents[index], _textComponents[index - 1]);
+        }
+    }
+
+    private void MoveItemDown(TextGuid item)
+    {
+        var index = _textComponents.IndexOf(item);
+        if (index < _textComponents.Count - 1)
+        {
+            (_textComponents[index + 1], _textComponents[index]) = (_textComponents[index], _textComponents[index + 1]);
+        }
+    }
+}
