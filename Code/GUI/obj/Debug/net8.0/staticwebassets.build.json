@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "LCg4G2haN7rmTLenc97Hk9DpgVx/GamN66rWQDFyTkg=",
+  "Hash": "Aamng475a5T5bocPM0RAfMXHI6Job9smspcmsDI153k=",
   "Source": "GUI",
   "BasePath": "/",
   "Mode": "Root",
@@ -2523,6 +2523,25 @@
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "S:\\Projects\\StoryInteract\\Code\\GUI\\obj\\Debug\\net8.0\\webcil\\System.Private.Xml.wasm"
+    },
+    {
+      "Identity": "S:\\Projects\\StoryInteract\\Code\\GUI\\bin\\Debug\\net8.0\\wwwroot\\_framework\\System.Reactive.wasm",
+      "SourceId": "GUI",
+      "SourceType": "Computed",
+      "ContentRoot": "S:\\Projects\\StoryInteract\\Code\\GUI\\bin\\Debug\\net8.0\\wwwroot\\",
+      "BasePath": "/",
+      "RelativePath": "_framework/System.Reactive.wasm",
+      "AssetKind": "Build",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "WasmResource",
+      "AssetTraitValue": "runtime",
+      "CopyToOutputDirectory": "PreserveNewest",
+      "CopyToPublishDirectory": "Never",
+      "OriginalItemSpec": "S:\\Projects\\StoryInteract\\Code\\GUI\\obj\\Debug\\net8.0\\webcil\\System.Reactive.wasm"
     },
     {
       "Identity": "S:\\Projects\\StoryInteract\\Code\\GUI\\bin\\Debug\\net8.0\\wwwroot\\_framework\\System.Reflection.DispatchProxy.wasm",
@@ -5981,6 +6000,25 @@
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "S:\\Projects\\StoryInteract\\Code\\GUI\\bin\\Debug\\net8.0\\wwwroot\\_framework\\System.Threading.Channels.wasm"
+    },
+    {
+      "Identity": "S:\\Projects\\StoryInteract\\Code\\GUI\\obj\\Debug\\net8.0\\compressed\\huin6xp68p.gz",
+      "SourceId": "GUI",
+      "SourceType": "Computed",
+      "ContentRoot": "S:\\Projects\\StoryInteract\\Code\\GUI\\bin\\Debug\\net8.0\\wwwroot\\",
+      "BasePath": "/",
+      "RelativePath": "_framework/System.Reactive.wasm.gz",
+      "AssetKind": "Build",
+      "AssetMode": "All",
+      "AssetRole": "Alternative",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "S:\\Projects\\StoryInteract\\Code\\GUI\\bin\\Debug\\net8.0\\wwwroot\\_framework\\System.Reactive.wasm",
+      "AssetTraitName": "Content-Encoding",
+      "AssetTraitValue": "gzip",
+      "CopyToOutputDirectory": "PreserveNewest",
+      "CopyToPublishDirectory": "Never",
+      "OriginalItemSpec": "S:\\Projects\\StoryInteract\\Code\\GUI\\bin\\Debug\\net8.0\\wwwroot\\_framework\\System.Reactive.wasm"
     },
     {
       "Identity": "S:\\Projects\\StoryInteract\\Code\\GUI\\obj\\Debug\\net8.0\\compressed\\hzhpu2ukss.gz",

@@ -1,7 +1,10 @@
 ﻿namespace GUI.Entites;
 
-public enum TextComponent
+public class TextComponent
 {
-    TextField,
-    TextOption
+    public Guid Guid { get; } = Guid.NewGuid();
+
+    public TextComponentType Type { get; init; } = TextComponentType.TextField;
+
+    public string Content { get; set; } = string.Empty;
 }

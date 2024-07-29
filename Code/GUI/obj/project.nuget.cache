@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "uEzn4i1luuk71ePccl0aoy/Tz5aosUqQgkoJBv67Xwb8dNz7gTpprBVcfJs61tTUrNQ+wJPMJyAx1l1aRRBESg==",
+  "dgSpecHash": "AtaiKNtrFofzNLCFa55VyLLnK5inJb8E/DBYwxZhjQtgeq/foIk4kgsjLOXz4IHvwjc39GZWKetLk64lTlPATw==",
   "success": true,
   "projectFilePath": "S:\\Projects\\StoryInteract\\Code\\GUI\\GUI.csproj",
   "expectedPackageFiles": [
@@ -34,6 +34,7 @@
     "C:\\Users\\DasYak\\.nuget\\packages\\microsoft.net.sdk.webassembly.pack\\8.0.5\\microsoft.net.sdk.webassembly.pack.8.0.5.nupkg.sha512",
     "C:\\Users\\DasYak\\.nuget\\packages\\mudblazor\\7.4.0\\mudblazor.7.4.0.nupkg.sha512",
     "C:\\Users\\DasYak\\.nuget\\packages\\system.io.pipelines\\8.0.0\\system.io.pipelines.8.0.0.nupkg.sha512",
+    "C:\\Users\\DasYak\\.nuget\\packages\\system.reactive\\6.0.1\\system.reactive.6.0.1.nupkg.sha512",
     "C:\\Users\\DasYak\\.nuget\\packages\\system.text.encodings.web\\8.0.0\\system.text.encodings.web.8.0.0.nupkg.sha512",
     "C:\\Users\\DasYak\\.nuget\\packages\\system.text.json\\8.0.0\\system.text.json.8.0.0.nupkg.sha512",
     "C:\\Users\\DasYak\\.nuget\\packages\\microsoft.netcore.app.runtime.mono.browser-wasm\\8.0.5\\microsoft.netcore.app.runtime.mono.browser-wasm.8.0.5.nupkg.sha512"

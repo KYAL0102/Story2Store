@@ -1,5 +1,33 @@
-﻿<h3>OptionEditor</h3>
+﻿@using GUI.Coordinators
+
+<h3>OptionEditor</h3>
+
+@if (_selectedOption == Guid.Empty)
+{
+    <p>No option selected</p>
+}
+else
+{
+    <p>Option with Guid @_selectedOption.ToString() selected</p>
+}
 
 @code {
+    [Inject]
+    private StoryEditCoordinator? StoryEditCoordinator { get; set; }
     
+    private Guid _selectedOption = Guid.Empty;
+    
+    protected override void OnInitialized()
+    {
+        if (StoryEditCoordinator != null)
+        {
+            _selectedOption = StoryEditCoordinator.SelectedOption;
+            StoryEditCoordinator.ObservableProperty.Subscribe(value =>
+            {
+                _selectedOption = value;
+                StateHasChanged();
+            });
+        }
+        else Console.WriteLine("Service is null");
+    }
 }

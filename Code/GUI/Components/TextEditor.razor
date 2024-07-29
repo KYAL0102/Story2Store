@@ -1,9 +1,11 @@
-﻿@using GUI.Entites
+﻿@using System.ComponentModel
+@using GUI.Coordinators
+@using GUI.Entites
 
 <MudTextField T="string" Variant="Variant.Outlined" Label="Title of your story" Class="mb-4"/>
 
 <MudContainer Class="pa-0">
-    @foreach (TextGuid component in _textComponents)
+    @foreach (TextComponent component in _textComponents)
     {
         <MudContainer Class="pa-0 d-flex flex-row flex-grow-1">
             <MudContainer Class="pa-0 d-flex flex-column justify-content-center" Style="width: fit-content">
@@ -11,14 +13,14 @@
                 <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.ArrowDownward" Disabled="@IsLastItem(component)" OnClick="() => MoveItemDown(component)" Color="Color.Primary"/>
             </MudContainer>
             <MudContainer Class="pa-0 d-flex flex-grow-1 align-content-center">
-                @switch (component.TextComponent)
+                @switch (component.Type)
                 {
-                    case TextComponent.TextField:
-                        <MudTextField @bind-Value="_textFieldValues[component.Guid]" Variant="Variant.Filled" AutoGrow ShrinkLabel Label="Write your story here"
+                    case TextComponentType.TextField:
+                        <MudTextField @bind-Value="component.Content" Variant="Variant.Filled" AutoGrow ShrinkLabel Label="Write your story here"
                                       Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Delete" OnAdornmentClick="() => OnDeleteTextField(component)"/>
                         break;
-                    case TextComponent.TextOption:
-                        <MudButton Variant="Variant.Filled" Color="Color.Secondary">
+                    case TextComponentType.TextOption:
+                        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="() => OnOptionButtonClicked(component)">
                             Option
                         </MudButton>
                         <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => OnDeleteTextField(component)">Remove</MudIconButton>
@@ -35,34 +37,38 @@
 <MudDivider Style="height: 2px" Class="ma-4"/>
 
 <MudContainer>
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="() => OnAddButtonClick(TextComponent.TextField)">Add Text</MudButton>
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="() => OnAddButtonClick(TextComponent.TextOption)">Add Option</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="() => OnAddButtonClick(TextComponentType.TextField)">Add Text</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="() => OnAddButtonClick(TextComponentType.TextOption)">Add Option</MudButton>
 </MudContainer>
 
 @code {
-    private List<TextGuid> _textComponents = new();
-    private Dictionary<Guid, string> _textFieldValues = new();
+    [Inject]
+    private StoryEditCoordinator? StoryEditCoordinator { get; set; }
+    private List<TextComponent> _textComponents = new();
 
-    private bool IsFirstItem(TextGuid item) => _textComponents.IndexOf(item) == 0;
-    private bool IsLastItem(TextGuid item) => _textComponents.IndexOf(item) == _textComponents.Count - 1;
+    private bool IsFirstItem(TextComponent item) => _textComponents.IndexOf(item) == 0;
+    private bool IsLastItem(TextComponent item) => _textComponents.IndexOf(item) == _textComponents.Count - 1;
 
-    private void OnAddButtonClick(TextComponent component)
+    private void OnAddButtonClick(TextComponentType componentType)
     {
-        var id = new TextGuid
+        var id = new TextComponent
         {
-            TextComponent = component
+            Type = componentType
         };
         _textComponents.Add(id);
-        _textFieldValues.Add(id.Guid, string.Empty);
     }
 
-    private void OnDeleteTextField(TextGuid id)
+    private void OnDeleteTextField(TextComponent id)
     {
         _textComponents.Remove(id);
-        _textFieldValues.Remove(id.Guid);
     }
 
-    private void MoveItemUp(TextGuid item)
+    private void OnOptionButtonClicked(TextComponent component)
+    {
+        if (StoryEditCoordinator != null) StoryEditCoordinator.SelectedOption = component.Guid;
+    }
+
+    private void MoveItemUp(TextComponent item)
     {
         var index = _textComponents.IndexOf(item);
         if (index > 0)
@@ -71,7 +77,7 @@
         }
     }
 
-    private void MoveItemDown(TextGuid item)
+    private void MoveItemDown(TextComponent item)
     {
         var index = _textComponents.IndexOf(item);
         if (index < _textComponents.Count - 1)

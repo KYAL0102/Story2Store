@@ -2077,3 +2077,8 @@ S:\Projects\StoryInteract\Code\GUI\obj\Debug\net8.0\GUI.dll
 S:\Projects\StoryInteract\Code\GUI\obj\Debug\net8.0\refint\GUI.dll
 S:\Projects\StoryInteract\Code\GUI\obj\Debug\net8.0\GUI.pdb
 S:\Projects\StoryInteract\Code\GUI\obj\Debug\net8.0\ref\GUI.dll
+S:\Projects\StoryInteract\Code\GUI\bin\Debug\net8.0\wwwroot\_framework\System.Reactive.wasm
+S:\Projects\StoryInteract\Code\GUI\bin\Debug\net8.0\wwwroot\_framework\System.Reactive.wasm.gz
+S:\Projects\StoryInteract\Code\GUI\bin\Debug\net8.0\System.Reactive.dll
+S:\Projects\StoryInteract\Code\GUI\obj\Debug\net8.0\webcil\System.Reactive.wasm
+S:\Projects\StoryInteract\Code\GUI\obj\Debug\net8.0\compressed\huin6xp68p.gz
