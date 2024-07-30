@@ -9,6 +9,17 @@
 else
 {
     <p>Option with Guid @_selectedOption.ToString() selected</p>
+    @foreach (var option in _options.Select((value, index) => new { value, index }))
+    {
+        <MudTextField T="string" @bind-Value="_options[option.index]" Variant="Variant.Filled" Class="pa-1 ma-1 rounded" 
+                      Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Delete" OnAdornmentClick="() => OnDeleteTextField(option.index)"/>
+    }
+    
+    <MudDivider Style="height: 2px" Class="ma-4"/>
+    
+    <MudContainer Class="pa-0" Style="text-align: center">
+        <MudIconButton Icon="@Icons.Material.Filled.Add" OnClick="AddTextField"/>
+    </MudContainer>
 }
 
 @code {
@@ -16,6 +27,7 @@ else
     private StoryEditCoordinator? StoryEditCoordinator { get; set; }
     
     private Guid _selectedOption = Guid.Empty;
+    private List<string> _options = [];
     
     protected override void OnInitialized()
     {
@@ -29,5 +41,17 @@ else
             });
         }
         else Console.WriteLine("Service is null");
+
+        _options.AddRange(["wandering", "walking", "going"]);
+    }
+    
+    private void OnDeleteTextField(int idx)
+    {
+        if(_options.Count - 1 >= idx) _options.RemoveAt(idx);
+    }
+
+    private void AddTextField()
+    {
+        _options.Add(string.Empty);
     }
 }

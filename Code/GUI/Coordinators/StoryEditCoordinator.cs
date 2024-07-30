@@ -10,10 +10,6 @@ public class StoryEditCoordinator
     public Guid SelectedOption
     {
         get => _observableProperty.Value;
-        set
-        {
-            Console.WriteLine("selecting option");
-            _observableProperty.OnNext(value);
-        }
+        set => _observableProperty.OnNext(value);
     }
 }
