@@ -2,13 +2,16 @@
 
 @page "/Editor"
 
-<MudContainer Style="height: 100%; width: 100%; padding: 0; margin: 0" Fixed="true">
-    <MudGrid Style="height: 100%;">
-        <MudItem xs="8" Style="height: 100%; max-height: 100vh; overflow-y: scroll; overflow-x: hidden">
-            <TextEditor></TextEditor>
-        </MudItem>
-        <MudItem xs="4" Style="height: 100%; max-height: 100vh; overflow-y: scroll; overflow-x: hidden">
-            <OptionEditor></OptionEditor>
-        </MudItem>
-    </MudGrid>
+<MudContainer Class="ma-0 pa-0 d-flex flex-column gap-2" Style="max-width: none; max-height: 100vh; height: 100%">
+    <MudContainer Class="ma-0 px-4 pt-4" Style="max-width: none; height: fit-content;">
+        <EditorHeader/>
+    </MudContainer>
+    <MudContainer Class="ma-0 px-4 pb-4 gap-2 flex-grow-1 d-flex flex-row" Style="overflow: hidden; max-width: none; height: 100%">
+        <MudContainer Class="ma-0 pa-0" Style="max-width: none; max-height: 100%; overflow-y: scroll;">
+            <TextEditor/>
+        </MudContainer>
+        <MudContainer Class="ma-0 pa-0" Style="width: 35%; min-width: 200px; max-height: 100%; overflow-y: scroll;">
+            <OptionEditor/>
+        </MudContainer>
+    </MudContainer>
 </MudContainer>

@@ -2,7 +2,7 @@
 @using GUI.Coordinators
 @using GUI.Entites
 
-<MudTextField T="string" Variant="Variant.Outlined" Label="Title of your story" Class="mb-4"/>
+<MudTextField T="string" @bind-Value="_storyTitle" Variant="Variant.Outlined" Label="Title of your story" Class="mb-4"/>
 
 <MudContainer Class="pa-0">
     @foreach (TextComponent component in _textComponents)
@@ -45,9 +45,21 @@
     [Inject]
     private StoryEditCoordinator? StoryEditCoordinator { get; set; }
     private List<TextComponent> _textComponents = new();
+    private string _storyTitle = string.Empty;
 
     private bool IsFirstItem(TextComponent item) => _textComponents.IndexOf(item) == 0;
     private bool IsLastItem(TextComponent item) => _textComponents.IndexOf(item) == _textComponents.Count - 1;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        if (StoryEditCoordinator != null)
+        {
+            _storyTitle = StoryEditCoordinator.StoryTitle;
+            _textComponents = StoryEditCoordinator.Components;
+        }
+    }
 
     private void OnAddButtonClick(TextComponentType componentType)
     {
