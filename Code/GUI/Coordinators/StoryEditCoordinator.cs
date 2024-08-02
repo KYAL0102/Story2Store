@@ -1,6 +1,6 @@
 ﻿using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using GUI.Entites;
+using GUI.Entities;
 
 namespace GUI.Coordinators;
 
@@ -18,30 +18,25 @@ public class StoryEditCoordinator
     
     public List<TextComponent> Components { get; } = 
     [
-        new TextComponent
+        new TextField()
         {
-            Type = TextComponentType.TextField,
-            Content = "Last"
+            Content = "Last "
         },
-        new TextComponent
+        new TextOption
         {
-            Type = TextComponentType.TextOption,
-            Content = "night;evening;Christmas"
+            Options = [ "morning", "christmas", "evening" ]
         },
-        new TextComponent
+        new TextField
         {
-            Type = TextComponentType.TextField,
-            Content = ", I met my old"
+            Content = ", I met my old "
         },
-        new TextComponent
+        new TextOption
         {
-            Type = TextComponentType.TextOption,
-            Content = "friend;grandpa;rival"
+            Options = [ "friend", "aunt", "nemesis"]
         },
-        new TextComponent
+        new TextField
         {
-            Type = TextComponentType.TextField,
-            Content = "and we talked a little bit."
+            Content = " and we talked a little bit."
         }
     ];
 }

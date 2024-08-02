@@ -1,5 +1,5 @@
 ﻿@using GUI.Coordinators
-@using GUI.Entites
+@using GUI.Entities
 
 <h3>OptionEditor</h3>
 
@@ -39,8 +39,8 @@ else
             {
                 _selectedOption = value;
                 var component = StoryEditCoordinator.Components.SingleOrDefault(item => item.Guid == _selectedOption);
-                if (component is not { Type: TextComponentType.TextOption }) return;
-                _options = component.Content.Split(';').ToList();
+                if (component?.GetType() != typeof(TextOption)) return;
+                _options = ((TextOption)component).Options;
                 StateHasChanged();
             });
         }

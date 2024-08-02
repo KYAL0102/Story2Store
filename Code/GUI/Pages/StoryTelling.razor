@@ -1,0 +1,63 @@
+﻿@page "/StoryTelling/{id:int}"
+@using GUI.Coordinators
+@using GUI.Entities
+
+<MudContainer Class="ma-0 pa-4" Style="max-width: none; width: 100%; max-height: 100vh; overflow-y: scroll">
+    <MudText Typo="Typo.h4" Style="height: 50px;">Story-Telling "@StoryEditCoordinator?.StoryTitle"</MudText>
+
+    <MudGrid Justify="Justify.Center" Spacing="4">
+        @foreach (var option in _textOptions[_curOptionIdx].Options)
+        {
+            var content = @option; 
+            <MudItem xs="4" Class="justify-content-center" Style="text-align: center">
+                <MudButton Size="Size.Large" Variant="Variant.Filled" Color="Color.Default" OnClick="() => OnOptionClick(content)">@option</MudButton>
+            </MudItem>
+        }
+    </MudGrid>
+</MudContainer>
+
+@code {
+    [Inject]
+    private StoryEditCoordinator? StoryEditCoordinator { get; set; }
+    [Inject]
+    private NavigationManager? NavigationManager { get; set; }
+    
+    private readonly List<TextOption> _textOptions = [];
+
+    private int _curOptionIdx;
+    
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if(StoryEditCoordinator != null) 
+        {
+            _textOptions.AddRange(StoryEditCoordinator.Components
+            .Where(item => item.GetType() == typeof(TextOption))
+            .Select(item => (TextOption) item)
+            .ToList());
+        }
+    }
+
+    private void OnOptionClick(string content)
+    {
+        var option = StoryEditCoordinator?.Components
+            .Where(item => item.GetType() == typeof(TextOption))
+            .Select(item => (TextOption)item)
+            .SingleOrDefault(item => item == _textOptions[_curOptionIdx]);
+
+        if (option == null) return;
+        option.LastSelected = content;
+
+        if (_curOptionIdx + 1 < _textOptions.Count)
+        {
+            _curOptionIdx++;
+            StateHasChanged();
+        }
+        else
+        {
+            NavigationManager?.NavigateTo("/StoryResult");
+        }
+    }
+}

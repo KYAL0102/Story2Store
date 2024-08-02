@@ -49,6 +49,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[S:/Projects/StoryInteract/Code/GUI/Pages/StoryResult.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU3RvcnlSZXN1bHQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[S:/Projects/StoryInteract/Code/GUI/Pages/StoryTelling.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU3RvcnlUZWxsaW5nLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [S:/Projects/StoryInteract/Code/GUI/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 

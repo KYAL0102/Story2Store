@@ -1,6 +1,7 @@
 ﻿@using System.ComponentModel
 @using GUI.Coordinators
-@using GUI.Entites
+@using GUI.Entities
+@using MudBlazor.Extensions
 
 <MudTextField T="string" @bind-Value="_storyTitle" Variant="Variant.Outlined" Label="Title of your story" Class="mb-4"/>
 
@@ -13,21 +14,19 @@
                 <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.ArrowDownward" Disabled="@IsLastItem(component)" OnClick="() => MoveItemDown(component)" Color="Color.Primary"/>
             </MudContainer>
             <MudContainer Class="pa-0 d-flex flex-grow-1 align-content-center">
-                @switch (component.Type)
+                @if (component.GetType() == typeof(TextField))
                 {
-                    case TextComponentType.TextField:
-                        <MudTextField @bind-Value="component.Content" Variant="Variant.Filled" AutoGrow ShrinkLabel Label="Write your story here"
-                                      Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Delete" OnAdornmentClick="() => OnDeleteTextField(component)"/>
-                        break;
-                    case TextComponentType.TextOption:
-                        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="() => OnOptionButtonClicked(component)">
-                            Option
-                        </MudButton>
-                        <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => OnDeleteTextField(component)">Remove</MudIconButton>
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    <MudTextField @bind-Value="component.As<TextField>()!.Content" Variant="Variant.Filled" AutoGrow ShrinkLabel Label="Write your story here"
+                                  Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Delete" OnAdornmentClick="() => OnDeleteTextField(component)"/>
                 }
+                else if (component.GetType() == typeof(TextOption))
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="() => OnOptionButtonClicked(component)">
+                        Option
+                    </MudButton>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => OnDeleteTextField(component)">Remove</MudIconButton>
+                }
+                
             </MudContainer>
         </MudContainer>
         <br/>
@@ -37,8 +36,8 @@
 <MudDivider Style="height: 2px" Class="ma-4"/>
 
 <MudContainer>
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="() => OnAddButtonClick(TextComponentType.TextField)">Add Text</MudButton>
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="() => OnAddButtonClick(TextComponentType.TextOption)">Add Option</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OnAddButtonClick">Add Text</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OnAddButtonClick">Add Option</MudButton>
 </MudContainer>
 
 @code {
@@ -61,12 +60,9 @@
         }
     }
 
-    private void OnAddButtonClick(TextComponentType componentType)
+    private void OnAddButtonClick()
     {
-        var id = new TextComponent
-        {
-            Type = componentType
-        };
+        var id = new TextOption();
         _textComponents.Add(id);
     }
 

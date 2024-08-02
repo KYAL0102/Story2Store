@@ -1,12 +1,23 @@
-﻿
-<MudContainer Class="d-flex flex-row justify-content-between" Style="max-width: none; width: 100%; height: 100%">
+﻿<MudContainer Class="d-flex flex-row justify-content-between" Style="max-width: none; width: 100%; height: 100%">
     <MudText Typo="Typo.h4" Style="width: fit-content">Story-Editor</MudText>
     <MudContainer Class="ma-0 pa-0 gap-2 d-flex flex-row" Style="max-width: none; width: fit-content">
-        <MudButton Variant="Variant.Outlined" Color="Color.Primary">Save</MudButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Success">START</MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="OnSaveBtnClick">Save</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="OnRunBtnClick">START</MudButton>
     </MudContainer>
 </MudContainer>
 
 @code {
+    [Inject]
+    public NavigationManager? NavigationManager { get; set; }
     
+    private void OnSaveBtnClick()
+    {
+        throw new NotImplementedException();
+    }
+    
+    private void OnRunBtnClick()
+    {
+        int storyId = 0;
+        if (NavigationManager != null) NavigationManager.NavigateTo($"/StoryTelling/{storyId}");
+    }
 }

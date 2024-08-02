@@ -1,0 +1,40 @@
+﻿@page "/StoryResult"
+@using GUI.Coordinators
+@using GUI.Entities
+
+<MudContainer Class="ma-0 pa-4 d-flex justify-content-center" 
+              Style="max-width: none; height: 100%; width: 100%; max-height: 100vh; overflow-y: scroll; background-color: #cccccc">
+    <MudPaper Class="pa-4" Style="width: 720px; height: 1020px;">
+        <MudText Typo="Typo.h4" Style="width: 100%; text-align: center">@StoryEditCoordinator?.StoryTitle</MudText>
+        <br/>
+        <MudText Typo="Typo.body1">@Story</MudText>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    [Inject]
+    private StoryEditCoordinator? StoryEditCoordinator { get; set; }
+    
+    private string? Story { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (StoryEditCoordinator == null) return;
+
+        Story = StoryEditCoordinator.Components
+            .Select(item =>
+            {
+                if (item.GetType() == typeof(TextField))
+                {
+                    return ((TextField)item).Content;
+                }
+                if (item.GetType() == typeof(TextOption))
+                {
+                    return ((TextOption)item).LastSelected;
+                }
+                return "";
+            })
+            .Aggregate((current, next) => $"{current}{next}");
+    }
+
+}
