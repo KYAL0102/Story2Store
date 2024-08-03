@@ -1,21 +1,41 @@
 ﻿@page "/StoryResult"
 @using GUI.Coordinators
 @using GUI.Entities
+@inject IJSRuntime Js
 
-<MudContainer Class="ma-0 pa-4 d-flex justify-content-center" 
-              Style="max-width: none; height: 100%; width: 100%; max-height: 100vh; overflow-y: scroll; background-color: #cccccc">
-    <MudPaper Class="pa-4" Style="width: 720px; height: 1020px;">
-        <MudText Typo="Typo.h4" Style="width: 100%; text-align: center">@StoryEditCoordinator?.StoryTitle</MudText>
-        <br/>
-        <MudText Typo="Typo.body1">@Story</MudText>
-    </MudPaper>
+<MudContainer Class="ma-0 pa-0"
+              Style="max-width: none; height: 100%; width: 100%; max-height: 100vh; overflow-y: hidden; background-color: #cccccc;">
+    <MudContainer Class="ma-0 px-2 pt-2 d-flex flex-row justify-content-between" Style="max-width: none; width: 100%; height: fit-content; background-color: #ffffff">
+        <MudText Typo="Typo.h4">Story-Result</MudText>
+        <MudContainer Class="ma-0 pa-0 d-flex flex-row" Style="max-width: none; width: fit-content">
+            @if (!string.IsNullOrEmpty(Story))
+            {
+                <MudIconButton Icon="@Icons.Material.Filled.Download" OnClick="DownloadStoryAsPdf"/>
+            }
+        </MudContainer>
+    </MudContainer>
+    <MudContainer Class="ma-0 px-4 pb-4 d-flex justify-content-center"
+                  Style="max-width: none; max-height: 100%; height: 100%; width: 100%; overflow-y: scroll;">
+        @if (string.IsNullOrEmpty(@Story))
+        {
+            <MudProgressCircular Color="Color.Primary" Indeterminate="true"/>
+        }
+        else
+        {
+            <MudPaper Class="my-4 pa-4" Style="width: 720px; height: 1020px;">
+                <MudText Typo="Typo.h4" Style="width: 100%; text-align: center">@StoryEditCoordinator?.StoryTitle</MudText>
+                <br/>
+                <MudText Typo="Typo.body1">@Story</MudText>
+            </MudPaper>
+        }
+    </MudContainer>
 </MudContainer>
 
 @code {
     [Inject]
     private StoryEditCoordinator? StoryEditCoordinator { get; set; }
-    
-    private string? Story { get; set; }
+
+    private string Story { get; set; } = string.Empty;
 
     protected override void OnInitialized()
     {
@@ -35,6 +55,12 @@
                 return "";
             })
             .Aggregate((current, next) => $"{current}{next}");
+    }
+
+    private async Task DownloadStoryAsPdf()
+    {
+        var title = StoryEditCoordinator?.StoryTitle;
+        await Js.InvokeVoidAsync("downloadFileFromStream", title, Story);
     }
 
 }
