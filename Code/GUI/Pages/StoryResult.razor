@@ -23,7 +23,7 @@
         else
         {
             <MudPaper Class="my-4 pa-4" Style="width: 720px; height: 1020px;">
-                <MudText Typo="Typo.h4" Style="width: 100%; text-align: center">@StoryEditCoordinator?.StoryTitle</MudText>
+                <MudText Typo="Typo.h4" Style="width: 100%; text-align: center">@StoryEditCoordinator?.CurrentStory.Title</MudText>
                 <br/>
                 <MudText Typo="Typo.body1">@Story</MudText>
             </MudPaper>
@@ -41,25 +41,31 @@
     {
         if (StoryEditCoordinator == null) return;
 
-        Story = StoryEditCoordinator.Components
-            .Select(item =>
-            {
-                if (item.GetType() == typeof(TextField))
+        if (StoryEditCoordinator.CurrentStory.Components.Count > 0)
+        {
+            Story = StoryEditCoordinator.CurrentStory.Components
+                .Select(item =>
                 {
-                    return ((TextField)item).Content;
-                }
-                if (item.GetType() == typeof(TextOption))
-                {
-                    return ((TextOption)item).LastSelected;
-                }
-                return "";
-            })
-            .Aggregate((current, next) => $"{current}{next}");
+                    if (item.GetType() == typeof(TextField))
+                    {
+                        return ((TextField)item).Content;
+                    }
+
+                    if (item.GetType() == typeof(TextOption))
+                    {
+                        return ((TextOption)item).LastSelected;
+                    }
+
+                    return "";
+                })
+                .Select(item => item.TrimEnd(' ').TrimStart(' '))
+                .Aggregate((current, next) => $"{current} {next}");
+        }
     }
 
     private async Task DownloadStoryAsPdf()
     {
-        var title = StoryEditCoordinator?.StoryTitle;
+        var title = StoryEditCoordinator?.CurrentStory.Title;
         await Js.InvokeVoidAsync("downloadFileFromStream", title, Story);
     }
 

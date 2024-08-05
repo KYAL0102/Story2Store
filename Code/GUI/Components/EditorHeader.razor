@@ -1,4 +1,5 @@
-﻿<MudContainer Class="d-flex flex-row justify-content-between" Style="max-width: none; width: 100%; height: 100%">
+﻿@using GUI.Coordinators
+<MudContainer Class="d-flex flex-row justify-content-between" Style="max-width: none; width: 100%; height: 100%">
     <MudText Typo="Typo.h4" Style="width: fit-content">Story-Editor</MudText>
     <MudContainer Class="ma-0 pa-0 gap-2 d-flex flex-row" Style="max-width: none; width: fit-content">
         <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="OnSaveBtnClick">Save</MudButton>
@@ -9,6 +10,8 @@
 @code {
     [Inject]
     public NavigationManager? NavigationManager { get; set; }
+    [Inject]
+    public StoryEditCoordinator? StoryEditCoordinator { get; set; }
     
     private void OnSaveBtnClick()
     {

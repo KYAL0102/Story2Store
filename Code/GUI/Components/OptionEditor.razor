@@ -38,7 +38,7 @@ else
             StoryEditCoordinator.ObservableProperty.Subscribe(value =>
             {
                 _selectedOption = value;
-                var component = StoryEditCoordinator.Components.SingleOrDefault(item => item.Guid == _selectedOption);
+                var component = StoryEditCoordinator.CurrentStory.Components.SingleOrDefault(item => item.Guid == _selectedOption);
                 if (component?.GetType() != typeof(TextOption)) return;
                 _options = ((TextOption)component).Options;
                 StateHasChanged();

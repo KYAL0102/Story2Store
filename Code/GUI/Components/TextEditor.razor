@@ -3,10 +3,10 @@
 @using GUI.Entities
 @using MudBlazor.Extensions
 
-<MudTextField T="string" @bind-Value="_storyTitle" Variant="Variant.Outlined" Label="Title of your story" Class="mb-4"/>
+<MudTextField T="string" @bind-Value="_story.Title" Variant="Variant.Outlined" Label="Title of your story" Class="mb-4"/>
 
 <MudContainer Class="pa-0">
-    @foreach (TextComponent component in _textComponents)
+    @foreach (TextComponent component in _story.Components)
     {
         <MudContainer Class="pa-0 d-flex flex-row flex-grow-1">
             <MudContainer Class="pa-0 d-flex flex-column justify-content-center" Style="width: fit-content">
@@ -36,18 +36,18 @@
 <MudDivider Style="height: 2px" Class="ma-4"/>
 
 <MudContainer>
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OnAddButtonClick">Add Text</MudButton>
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OnAddButtonClick">Add Option</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="() => OnAddBtnClick(new TextField())">Add Text</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="() => OnAddBtnClick(new TextOption())">Add Option</MudButton>
 </MudContainer>
 
 @code {
     [Inject]
     private StoryEditCoordinator? StoryEditCoordinator { get; set; }
-    private List<TextComponent> _textComponents = new();
-    private string _storyTitle = string.Empty;
 
-    private bool IsFirstItem(TextComponent item) => _textComponents.IndexOf(item) == 0;
-    private bool IsLastItem(TextComponent item) => _textComponents.IndexOf(item) == _textComponents.Count - 1;
+    private Story _story = new();
+
+    private bool IsFirstItem(TextComponent item) => _story.Components.IndexOf(item) == 0;
+    private bool IsLastItem(TextComponent item) => _story.Components.IndexOf(item) == _story.Components.Count - 1;
 
     protected override void OnInitialized()
     {
@@ -55,20 +55,18 @@
 
         if (StoryEditCoordinator != null)
         {
-            _storyTitle = StoryEditCoordinator.StoryTitle;
-            _textComponents = StoryEditCoordinator.Components;
+            _story = StoryEditCoordinator.CurrentStory;
         }
     }
 
-    private void OnAddButtonClick()
+    private void OnAddBtnClick(TextComponent newComponent)
     {
-        var id = new TextOption();
-        _textComponents.Add(id);
+        _story.Components.Add(newComponent);
     }
 
     private void OnDeleteTextField(TextComponent id)
     {
-        _textComponents.Remove(id);
+        _story.Components.Remove(id);
     }
 
     private void OnOptionButtonClicked(TextComponent component)
@@ -78,19 +76,19 @@
 
     private void MoveItemUp(TextComponent item)
     {
-        var index = _textComponents.IndexOf(item);
+        var index = _story.Components.IndexOf(item);
         if (index > 0)
         {
-            (_textComponents[index - 1], _textComponents[index]) = (_textComponents[index], _textComponents[index - 1]);
+            (_story.Components[index - 1], _story.Components[index]) = (_story.Components[index], _story.Components[index - 1]);
         }
     }
 
     private void MoveItemDown(TextComponent item)
     {
-        var index = _textComponents.IndexOf(item);
-        if (index < _textComponents.Count - 1)
+        var index = _story.Components.IndexOf(item);
+        if (index < _story.Components.Count - 1)
         {
-            (_textComponents[index + 1], _textComponents[index]) = (_textComponents[index], _textComponents[index + 1]);
+            (_story.Components[index + 1], _story.Components[index]) = (_story.Components[index], _story.Components[index + 1]);
         }
     }
 }

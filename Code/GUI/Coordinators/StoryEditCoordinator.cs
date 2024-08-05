@@ -14,29 +14,5 @@ public class StoryEditCoordinator
         set => _observableProperty.OnNext(value);
     }
 
-    public string StoryTitle { get; } = "Meeting";
-    
-    public List<TextComponent> Components { get; } = 
-    [
-        new TextField()
-        {
-            Content = "Last "
-        },
-        new TextOption
-        {
-            Options = [ "morning", "christmas", "evening" ]
-        },
-        new TextField
-        {
-            Content = ", I met my old "
-        },
-        new TextOption
-        {
-            Options = [ "friend", "aunt", "nemesis"]
-        },
-        new TextField
-        {
-            Content = " and we talked a little bit."
-        }
-    ];
+    public Story CurrentStory { get; set; } = new();
 }
