@@ -1,4 +1,9 @@
 ﻿@page "/"
+@using GUI.Coordinators
+@using GUI.Services
+@inject StoryService StoryService;
+@inject StoryEditCoordinator StoryEditCoordinator;
+@inject NavigationManager NavigationManager;
 
 <MudContainer Class="ma-0 pa-0 d-flex flex-column" Style="max-width: none; height: 100%; width: 100%; max-height: 100vh;">
     <MudContainer Class="ma-0 pa-2 d-flex flex-row justify-content-between" Style="max-width: none; height: fit-content; width: 100%;">
@@ -13,12 +18,12 @@
                 foreach (var story in _stories)
                 {
                     <MudItem xs="2" Class="ma-0 pa-1 d-flex justify-content-center align-items-center" Style="height: fit-content;">
-                        <MudButton Variant="Variant.Filled" Color="Color.Default" Style="width: 100%;">
+                        <MudButton Variant="Variant.Filled" Color="Color.Default" Style="width: 100%;" OnClick="() => OnStoryBtnClicked(story.Key)">
                             <MudContainer 
                                 Class="ma-0 pa-0 d-flex flex-column align-items-center"
                                 Style="height: fit-content; width: fit-content">
                                 <MudIcon Icon="@Icons.Material.Filled.Article" Color="Color.Primary" Style="font-size: 6rem;"/>
-                                <MudText Typo="Typo.body1">@story</MudText>
+                                <MudText Typo="Typo.body1">@story.Value</MudText>
                             </MudContainer>
                         </MudButton>
                     </MudItem>
@@ -29,11 +34,17 @@
 </MudContainer>
 
 @code {
-    private readonly List<string> _stories = [];
+    private Dictionary<int, string> _stories = [];
 
     protected override void OnInitialized()
     {
-        base.OnInitialized();
+        _stories = StoryService.GetAllStoryIDsAndNames();
+    }
+
+    private async Task OnStoryBtnClicked(int id)
+    {
+        StoryEditCoordinator.CurrentStory = await StoryService.GetStoryWithId(id);
+        NavigationManager.NavigateTo("/Editor");
     }
 
 }
