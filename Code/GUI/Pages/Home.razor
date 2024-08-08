@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using GUI.Coordinators
+@using GUI.Entities
 @using GUI.Services
 @inject StoryService StoryService;
 @inject StoryEditCoordinator StoryEditCoordinator;
@@ -8,43 +9,71 @@
 <MudContainer Class="ma-0 pa-0 d-flex flex-column" Style="max-width: none; height: 100%; width: 100%; max-height: 100vh;">
     <MudContainer Class="ma-0 pa-2 d-flex flex-row justify-content-between" Style="max-width: none; height: fit-content; width: 100%;">
         <MudText Typo="Typo.h4">Homepage</MudText>
-        <!--<MudContainer Class="ma-0 pa-0 d-flex flex-row" Style="max-width: none; width: fit-content"></MudContainer>-->
-    </MudContainer>
-    <MudContainer Class="ma-0 px-4 pb-4 pt-2 gap-2 flex-grow-1 d-flex flex-row justify-content-center" 
-                  Style="overflow: hidden; max-width: none; height: 100%;">
-        <MudGrid Class="ma-0 pa-0" Justify="Justify.FlexStart" Style="height: fit-content;">
-            @if (_stories.Count != 0)
+        <MudContainer Class="ma-0 pa-0 d-flex flex-row gap-4" Style="max-width: none; width: fit-content">
+            @if (!_pairSelected)
             {
-                foreach (var story in _stories)
-                {
-                    <MudItem xs="2" Class="ma-0 pa-1 d-flex justify-content-center align-items-center" Style="height: fit-content;">
-                        <MudButton Variant="Variant.Filled" Color="Color.Default" Style="width: 100%;" OnClick="() => OnStoryBtnClicked(story.Key)">
-                            <MudContainer 
-                                Class="ma-0 pa-0 d-flex flex-column align-items-center"
-                                Style="height: fit-content; width: fit-content">
-                                <MudIcon Icon="@Icons.Material.Filled.Article" Color="Color.Primary" Style="font-size: 6rem;"/>
-                                <MudText Typo="Typo.body1">@story.Value</MudText>
-                            </MudContainer>
-                        </MudButton>
-                    </MudItem>
-                }
+                <MudText Typo="Typo.h6" Color="Color.Primary" Class="d-flex align-items-center">@_selectedStory.Title</MudText>
             }
-        </MudGrid>
+            <MudButton Variant="Variant.Filled" Color="Color.Default" StartIcon="@Icons.Material.Filled.Edit" Disabled="@_pairSelected" 
+                       OnClick="() => OnEditBtnClicked(_selectedStory.Id)">Edit</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.AddCircleOutline"
+                       OnClick="OnNewBtnClicked">New</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" Disabled="@_pairSelected"
+                       OnClick="() => OnDeleteBtnClicked(_selectedStory.Id)">Delete</MudButton>
+        </MudContainer>
+    </MudContainer>
+    <MudContainer Class="ma-0 px-4 pb-4 pt-2 gap-2 flex-grow-1 d-flex flex-row justify-content-center"
+                  Style="overflow: hidden; max-width: none; height: 100%;">
+        @if (_stories.Count != 0)
+        {
+            <MudTable T="StoryLight" Items="_stories" Hover="true" OnRowClick="@OnRowClick"
+                      @bind-selectedItem="_selectedStory" SelectOnRowClick="true"
+                      Class="ma-0 pa-0" Style="height: fit-content; width: 100%;">
+                <HeaderContent>
+                    <MudTh>Nr</MudTh>
+                    <MudTh>Title</MudTh>
+                    <MudTh>Amount of components</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Nr">@context.Id</MudTd>
+                    <MudTd DataLabel="Title">@context.Title</MudTd>
+                    <MudTd DataLabel="Amount of components">@context.ComponentCount</MudTd>
+                </RowTemplate>
+            </MudTable>
+        }
     </MudContainer>
 </MudContainer>
 
 @code {
-    private Dictionary<int, string> _stories = [];
+    private List<StoryLight> _stories = [];
+    private StoryLight _selectedStory = new();
+    private bool _pairSelected = true;
 
     protected override void OnInitialized()
     {
-        _stories = StoryService.GetAllStoryIDsAndNames();
+        _stories = StoryService.GetAllStoryLightData();
     }
 
-    private async Task OnStoryBtnClicked(int id)
+    void OnRowClick(TableRowClickEventArgs<StoryLight> args)
+    {
+        Console.WriteLine("Hello");
+        if (args.Item != null) _selectedStory = args.Item;
+        _pairSelected = false;
+    }
+
+    private async Task OnEditBtnClicked(int id)
     {
         StoryEditCoordinator.CurrentStory = await StoryService.GetStoryWithId(id);
         NavigationManager.NavigateTo("/Editor");
     }
 
+    private async Task OnDeleteBtnClicked(int id)
+    {
+        
+    }
+
+    private async Task OnNewBtnClicked()
+    {
+        
+    }
 }

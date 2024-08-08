@@ -4,15 +4,38 @@ namespace GUI.Services;
 
 public class StoryService
 {
-    public Dictionary<int, string> GetAllStoryIDsAndNames()
+    public List<StoryLight> GetAllStoryLightData()
     {
-        return new Dictionary<int, string>
-        {
-            { 1, "A night sky" },
-            { 2, "A last dance" },
-            { 3, "No one knows" },
-            { 4, "Christmas tale" }
-        };
+        return
+        [
+            new StoryLight
+            {
+                Id = 1,
+                Title = "A night sky",
+                ComponentCount = 4
+            },
+
+            new StoryLight
+            {
+                Id = 2,
+                Title = "A last dance",
+                ComponentCount = 15
+            },
+
+            new StoryLight
+            {
+                Id = 3,
+                Title = "No one knows",
+                ComponentCount = 12
+            },
+
+            new StoryLight
+            {
+                Id = 4,
+                Title = "Christmas tale",
+                ComponentCount = 21
+            }
+        ];
     }
 
     public async Task<Story> GetStoryWithId(int id)
