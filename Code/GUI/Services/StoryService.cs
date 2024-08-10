@@ -1,4 +1,4 @@
-﻿using GUI.Entities;
+﻿using ClassLibrary.Entities;
 
 namespace GUI.Services;
 

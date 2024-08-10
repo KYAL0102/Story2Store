@@ -1,4 +1,4 @@
-﻿namespace GUI.Entities;
+﻿namespace ClassLibrary.Entities;
 
 public class TextComponent : IComparable<TextComponent>
 {

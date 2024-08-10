@@ -1,4 +1,4 @@
-﻿namespace GUI.Entities;
+﻿namespace ClassLibrary.Entities;
 
 public record StoryLight
 {

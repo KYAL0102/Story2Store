@@ -1,7 +1,8 @@
-﻿namespace GUI.Entities;
+﻿namespace ClassLibrary.Entities;
 
 public record Story : IComparable<Story>
 {
+    public int Id { get; set; } = -1;
     public string Title { get; set; } = string.Empty;
 
     public List<TextComponent> Components { get; init; } = [];

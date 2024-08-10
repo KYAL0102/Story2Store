@@ -1,4 +1,4 @@
-﻿using Core.Entities;
+﻿using ClassLibrary.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -17,10 +17,6 @@ public class StoryController : ControllerBase
     [HttpPost("AddStory")]
     public IActionResult AddStory([FromQuery] string username, [FromBody] string[] text)
     {
-        var story = new Story
-        {
-            Text = text
-        };
         return Ok(1);
     }
     

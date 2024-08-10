@@ -1,6 +1,6 @@
 ﻿using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using GUI.Entities;
+using ClassLibrary.Entities;
 
 namespace GUI.Coordinators;
 
