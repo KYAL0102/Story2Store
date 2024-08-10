@@ -1,4 +1,7 @@
 ﻿@using GUI.Coordinators
+@using GUI.Services
+@inject StoryService StoryService;
+
 <MudContainer Class="d-flex flex-row justify-content-between" Style="max-width: none; width: 100%; height: 100%">
     <MudText Typo="Typo.h4" Style="width: fit-content">Story-Editor</MudText>
     <MudContainer Class="ma-0 pa-0 gap-2 d-flex flex-row" Style="max-width: none; width: fit-content">
@@ -13,9 +16,10 @@
     [Inject]
     public StoryEditCoordinator? StoryEditCoordinator { get; set; }
     
-    private void OnSaveBtnClick()
+    private async Task OnSaveBtnClick()
     {
-        throw new NotImplementedException();
+        if (StoryEditCoordinator == null) return;
+        await StoryService.AddStory(StoryEditCoordinator.CurrentStory);
     }
     
     private void OnRunBtnClick()

@@ -1,64 +1,45 @@
-﻿using ClassLibrary.Entities;
+﻿using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
+using ClassLibrary;
+using ClassLibrary.Entities;
 
 namespace GUI.Services;
 
-public class StoryService
+public class StoryService(HttpClient http)
 {
-    public List<StoryLight> GetAllStoryLightData()
+    public async Task<List<StoryLight>?> GetAllStoryLightData()
     {
-        return
-        [
-            new StoryLight
-            {
-                Id = 1,
-                Title = "A night sky",
-                ComponentCount = 4
-            },
-
-            new StoryLight
-            {
-                Id = 2,
-                Title = "A last dance",
-                ComponentCount = 15
-            },
-
-            new StoryLight
-            {
-                Id = 3,
-                Title = "No one knows",
-                ComponentCount = 12
-            },
-
-            new StoryLight
-            {
-                Id = 4,
-                Title = "Christmas tale",
-                ComponentCount = 21
-            }
-        ];
+        var stories = await http.GetFromJsonAsync<List<StoryLight>>("api/Story/All");
+        return stories;
     }
 
-    public async Task<Story> GetStoryWithId(int id)
+    public async Task<Story?> GetStoryWithId(int id)
     {
-        return new Story
+        var story = await http.GetFromJsonAsync<Story>($"api/Story/{id}");
+        return story;
+    }
+
+    public async Task AddStory(Story story)
+    {
+        string json = JsonSerializer.Serialize(story, GlobalConstants.JsonOption);
+        string username = "Joe";
+
+        using StringContent content = new(
+            json,
+            Encoding.UTF8,
+            "application/json"
+            );
+
+        var response = await http.PostAsync($"api/Story/AddStory?username={Uri.EscapeDataString(username)}", content);
+
+        try
         {
-            Title = "A night sky",
-            Components = 
-            [
-                new TextField
-                {
-                    Content = "The sky today is"
-                },
-                new TextOption
-                {
-                    Options = 
-                    [
-                        "beautiful!",
-                        "awesome!",
-                        "blue!"
-                    ]
-                }
-            ]
-        };
+            response.EnsureSuccessStatusCode();
+        }
+        catch (HttpRequestException e)
+        {
+            Console.WriteLine(e.Message);
+        }
     }
 }

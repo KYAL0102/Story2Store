@@ -49,14 +49,14 @@
     private StoryLight _selectedStory = new();
     private bool _pairSelected = true;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        _stories = StoryService.GetAllStoryLightData();
+        var result = await StoryService.GetAllStoryLightData();
+        if (result != null) _stories = result;
     }
 
     void OnRowClick(TableRowClickEventArgs<StoryLight> args)
     {
-        Console.WriteLine("Hello");
         if (args.Item != null) _selectedStory = args.Item;
         _pairSelected = false;
     }

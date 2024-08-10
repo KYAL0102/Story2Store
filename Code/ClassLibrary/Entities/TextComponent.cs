@@ -1,5 +1,9 @@
-﻿namespace ClassLibrary.Entities;
+﻿using System.Text.Json.Serialization;
+using ClassLibrary.Converter;
 
+namespace ClassLibrary.Entities;
+
+[JsonConverter(typeof(TextComponentConverter))]
 public class TextComponent : IComparable<TextComponent>
 {
     public Guid Guid { get; } = Guid.NewGuid();
