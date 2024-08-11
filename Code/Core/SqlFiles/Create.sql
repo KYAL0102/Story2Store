@@ -17,3 +17,8 @@ CREATE TABLE IF NOT EXISTS "TextComponent" (
     "StoryId" INTEGER NOT NULL,
     FOREIGN KEY ("StoryId") REFERENCES "Story" ("Id")
 );
+
+CREATE VIEW StoryLightView AS
+SELECT s.Id, s.Title, COUNT(c.Guid) AS 'ComponentAmount'
+FROM Story s INNER JOIN TextComponent c ON (s.Id == c.StoryId)
+GROUP BY s.Id, s.Title;

@@ -6,7 +6,7 @@ namespace ClassLibrary.Entities;
 [JsonConverter(typeof(TextComponentConverter))]
 public class TextComponent : IComparable<TextComponent>
 {
-    public Guid Guid { get; } = Guid.NewGuid();
+    public Guid Guid { get; init; } = Guid.NewGuid();
     public virtual int CompareTo(TextComponent? other)
     {
         if (other == null) return 1;

@@ -63,17 +63,27 @@
 
     private async Task OnEditBtnClicked(int id)
     {
-        StoryEditCoordinator.CurrentStory = await StoryService.GetStoryWithId(id);
+        var result = await StoryService.GetStoryWithId(id);
+        
+        if (result == null) return;
+        
+        StoryEditCoordinator.CurrentStory = result;
         NavigationManager.NavigateTo("/Editor");
     }
 
     private async Task OnDeleteBtnClicked(int id)
     {
-        
+        var result = await StoryService.DeleteStory(id);
+        if (result)
+        {
+            var inListItem = _stories.SingleOrDefault(item => item.Id == id);
+            if (inListItem != null) _stories.Remove(inListItem);
+        }
     }
 
-    private async Task OnNewBtnClicked()
+    private void OnNewBtnClicked()
     {
-        
+        StoryEditCoordinator.CurrentStory = new Story();
+        NavigationManager.NavigateTo("/Editor");
     }
 }

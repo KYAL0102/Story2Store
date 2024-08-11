@@ -20,8 +20,32 @@ public class StoryService(HttpClient http)
         return story;
     }
 
-    public async Task AddStory(Story story)
+    public async Task UpdateStory(Story story)
     {
+        string json = JsonSerializer.Serialize(story, GlobalConstants.JsonOption);
+        string username = "Joe";
+        
+        using StringContent content = new(
+            json,
+            Encoding.UTF8,
+            "application/json"
+        );
+
+        var response = await http.PatchAsync($"api/Story/UpdateStory?username={Uri.EscapeDataString(username)}", content);
+        
+        try
+        {
+            response.EnsureSuccessStatusCode();
+        }
+        catch (HttpRequestException e)
+        {
+            Console.WriteLine(e.Message);
+        }
+    }
+
+    public async Task<int> AddStory(Story story)
+    {
+        int id = 0;
         string json = JsonSerializer.Serialize(story, GlobalConstants.JsonOption);
         string username = "Joe";
 
@@ -36,10 +60,38 @@ public class StoryService(HttpClient http)
         try
         {
             response.EnsureSuccessStatusCode();
+
+            var result = await response.Content.ReadAsStringAsync();
+
+            id = int.Parse(result);
         }
         catch (HttpRequestException e)
         {
             Console.WriteLine(e.Message);
+        }
+        catch (FormatException)
+        {
+            return -1;
+        }
+
+        return id;
+    }
+
+    public async Task<bool> DeleteStory(int id)
+    {
+        string username = "Joe";
+
+        try
+        {
+            var response = await http.DeleteAsync($"api/Story/DeleteStory/{id}?username={Uri.EscapeDataString(username)}");
+            
+            response.EnsureSuccessStatusCode();
+            return true;
+        }
+        catch (HttpRequestException e)
+        {
+            Console.WriteLine(e.Message);
+            return false;
         }
     }
 }

@@ -1,89 +1,81 @@
-﻿using ClassLibrary.Entities;
+﻿using System.Data.SQLite;
+using ClassLibrary.Entities;
+using Core.Managers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class StoryController : ControllerBase
+public class StoryController(SqLiteManager sqLiteManager) : ControllerBase
 {
     [HttpGet("All")]
-    public IActionResult GetAllStories()
+    public async Task<IActionResult> GetAllStories()
     {
-        var stories = new[] {
-            new StoryLight
-            {
-                Id = 1,
-                Title = "A night sky",
-                ComponentCount = 4
-            },
-
-            new StoryLight
-            {
-                Id = 2,
-                Title = "A last dance",
-                ComponentCount = 15
-            },
-
-            new StoryLight
-            {
-                Id = 3,
-                Title = "No one knows",
-                ComponentCount = 12
-            },
-
-            new StoryLight
-            {
-                Id = 4,
-                Title = "Christmas tale",
-                ComponentCount = 21
-            }
-        };
-
-        return Ok(stories);
+        try
+        {
+            var stories = await sqLiteManager.GetAllStories();
+            return Ok(stories);
+        }
+        catch (SQLiteException e)
+        {
+            return BadRequest(e.Message);
+        }
     }
     
     [HttpGet("{id}")]
-    public IActionResult GetStoryById([FromRoute] int id)
+    public async Task<IActionResult> GetStoryById([FromRoute] int id)
     {
-        var story = new Story
+        try
         {
-            Title = "A night sky",
-            Components = 
-            [
-                new TextField
-                {
-                    Content = "The sky today is"
-                },
-                new TextOption
-                {
-                    Options = 
-                    [
-                        "beautiful!",
-                        "awesome!",
-                        "blue!"
-                    ]
-                }
-            ]
-        };
-        return Ok(story);
+            var story = await sqLiteManager.GetStoryById(id);
+            return Ok(story);
+        }
+        catch (SQLiteException e)
+        {
+            return BadRequest(e.Message);
+        }
     }
     
     [HttpPost("AddStory")]
-    public IActionResult AddStory([FromQuery] string username, [FromBody] Story story)
+    public async Task<IActionResult> AddStory([FromQuery] string username, [FromBody] Story story)
     {
-        return Ok(1);
+        try
+        {
+            var id = await sqLiteManager.AddNewStory(username, story);
+            return Ok(id);
+        }
+        catch (SQLiteException e)
+        {
+            return BadRequest(e.Message);
+        }
     }
     
     [HttpPatch("UpdateStory")]
-    public IActionResult UpdateStory([FromQuery] string username, [FromBody] Story story)
+    public async Task<IActionResult> UpdateStory([FromQuery] string username, [FromBody] Story story)
     {
-        return Ok(1);
+        try
+        {
+            await sqLiteManager.UpdateStory(story);
+        }
+        catch (SQLiteException e)
+        {
+            return BadRequest(e.Message);
+        }
+        return Ok("Story successfully updated!");
     }
     
     [HttpDelete("DeleteStory/{id}")]
-    public IActionResult DeleteStory([FromQuery] string username, [FromRoute] Story story)
+    public async Task<IActionResult> DeleteStory([FromQuery] string username, [FromRoute] int id)
     {
+        try
+        {
+            await sqLiteManager.DeleteStory(id);
+        }
+        catch (SQLiteException e)
+        {
+            return BadRequest(e.Message);
+        }
         return Ok("Story deleted.");
     }
 }

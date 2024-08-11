@@ -19,7 +19,16 @@
     private async Task OnSaveBtnClick()
     {
         if (StoryEditCoordinator == null) return;
-        await StoryService.AddStory(StoryEditCoordinator.CurrentStory);
+        
+        if (StoryEditCoordinator.CurrentStory.Id != -1)
+        {
+            await StoryService.UpdateStory(StoryEditCoordinator.CurrentStory);
+        }
+        else
+        {
+            var id = await StoryService.AddStory(StoryEditCoordinator.CurrentStory);
+            StoryEditCoordinator.CurrentStory.Id = id;
+        }
     }
     
     private void OnRunBtnClick()
