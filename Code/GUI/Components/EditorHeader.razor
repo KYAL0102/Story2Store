@@ -1,25 +1,42 @@
-﻿@using GUI.Coordinators
+﻿@using System.ComponentModel
+@using GUI.Coordinators
 @using GUI.Services
+@inject NavigationManager NavigationManager;
+@inject StoryEditCoordinator StoryEditCoordinator;
 @inject StoryService StoryService;
 
 <MudContainer Class="d-flex flex-row justify-content-between" Style="max-width: none; width: 100%; height: 100%">
     <MudText Typo="Typo.h4" Style="width: fit-content">Story-Editor</MudText>
     <MudContainer Class="ma-0 pa-0 gap-2 d-flex flex-row" Style="max-width: none; width: fit-content">
-        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="OnSaveBtnClick">Save</MudButton>
+        <MudButton Variant="@_savedBtnVariant" Color="Color.Primary" OnClick="OnSaveBtnClick">Save</MudButton>
         <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="OnRunBtnClick">START</MudButton>
     </MudContainer>
 </MudContainer>
 
 @code {
-    [Inject]
-    public NavigationManager? NavigationManager { get; set; }
-    [Inject]
-    public StoryEditCoordinator? StoryEditCoordinator { get; set; }
+    private Variant _savedBtnVariant = Variant.Outlined;
+
+    protected override void OnInitialized()
+    {
+        StoryEditCoordinator.PropertyChanged += OnStoryEditCoordinatorPropertyChanged;
+    }
     
+    private void OnStoryEditCoordinatorPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(StoryEditCoordinator.StoryChanged))
+        {
+            UpdateSaveButtonVariant();
+        }
+    }
+    
+    private void UpdateSaveButtonVariant()
+    {
+        _savedBtnVariant = StoryEditCoordinator.StoryChanged ? Variant.Filled : Variant.Outlined;
+        StateHasChanged();
+    }
+
     private async Task OnSaveBtnClick()
     {
-        if (StoryEditCoordinator == null) return;
-        
         if (StoryEditCoordinator.CurrentStory.Id != -1)
         {
             await StoryService.UpdateStory(StoryEditCoordinator.CurrentStory);
@@ -34,6 +51,6 @@
     private void OnRunBtnClick()
     {
         int storyId = 0;
-        if (NavigationManager != null) NavigationManager.NavigateTo($"/StoryTelling/{storyId}");
+        NavigationManager.NavigateTo($"/StoryTelling/{storyId}");
     }
 }

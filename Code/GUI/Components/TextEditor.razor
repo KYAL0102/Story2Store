@@ -2,8 +2,9 @@
 @using GUI.Coordinators
 @using ClassLibrary.Entities
 @using MudBlazor.Extensions
+@inject StoryEditCoordinator StoryEditCoordinator;
 
-<MudTextField T="string" @bind-Value="_story.Title" Variant="Variant.Outlined" Label="Title of your story" Class="mb-4"/>
+<MudTextField T="string" @bind-Value="_story.Title" Variant="Variant.Outlined" Label="Title of your story" Class="mb-4" OnKeyUp="OnChange"/>
 
 <MudContainer Class="pa-0">
     @foreach (TextComponent component in _story.Components)
@@ -16,7 +17,7 @@
             <MudContainer Class="pa-0 d-flex flex-grow-1 align-content-center">
                 @if (component.GetType() == typeof(TextField))
                 {
-                    <MudTextField @bind-Value="component.As<TextField>()!.Content" Variant="Variant.Filled" AutoGrow ShrinkLabel Label="Write your story here"
+                    <MudTextField @bind-Value="component.As<TextField>()!.Content" Variant="Variant.Filled" AutoGrow ShrinkLabel Label="Write your story here" OnKeyUp="OnChange"
                                   Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Delete" OnAdornmentClick="() => OnDeleteTextField(component)"/>
                 }
                 else if (component.GetType() == typeof(TextOption))
@@ -41,9 +42,6 @@
 </MudContainer>
 
 @code {
-    [Inject]
-    private StoryEditCoordinator? StoryEditCoordinator { get; set; }
-
     private Story _story = new();
 
     private bool IsFirstItem(TextComponent item) => _story.Components.IndexOf(item) == 0;
@@ -58,15 +56,22 @@
             _story = StoryEditCoordinator.CurrentStory;
         }
     }
+    
+    private void OnChange()
+    {
+        StoryEditCoordinator.ChangedCurrentStory();
+    }
 
     private void OnAddBtnClick(TextComponent newComponent)
     {
         _story.Components.Add(newComponent);
+        OnChange();
     }
 
     private void OnDeleteTextField(TextComponent id)
     {
         _story.Components.Remove(id);
+        OnChange();
     }
 
     private void OnOptionButtonClicked(TextComponent component)
@@ -77,18 +82,18 @@
     private void MoveItemUp(TextComponent item)
     {
         var index = _story.Components.IndexOf(item);
-        if (index > 0)
-        {
-            (_story.Components[index - 1], _story.Components[index]) = (_story.Components[index], _story.Components[index - 1]);
-        }
+        if (index <= 0) return;
+        
+        (_story.Components[index - 1], _story.Components[index]) = (_story.Components[index], _story.Components[index - 1]);
+        OnChange();
     }
 
     private void MoveItemDown(TextComponent item)
     {
         var index = _story.Components.IndexOf(item);
-        if (index < _story.Components.Count - 1)
-        {
-            (_story.Components[index + 1], _story.Components[index]) = (_story.Components[index], _story.Components[index + 1]);
-        }
+        if (index >= _story.Components.Count - 1) return;
+        
+        (_story.Components[index + 1], _story.Components[index]) = (_story.Components[index], _story.Components[index + 1]);
+        OnChange();
     }
 }

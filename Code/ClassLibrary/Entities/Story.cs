@@ -1,6 +1,6 @@
 ﻿namespace ClassLibrary.Entities;
 
-public record Story : IComparable<Story>
+public class Story : IComparable<Story>, ICloneable
 {
     public int Id { get; set; } = -1;
     public string Title { get; set; } = string.Empty;
@@ -23,18 +23,27 @@ public record Story : IComparable<Story>
             return componentCountComparison;
         }
 
-        foreach (var component in Components)
+        for (var x = 0; x < Components.Count; x++)
         {
-            var componentFound = false;
-            foreach (var otherComponent in other.Components)
-            {
-                var componentComparison = component.CompareTo(otherComponent);
-                if (componentComparison == 0) componentFound = true;
-            }
+            var nativeComponent = Components[x];
+            var remoteComponent = other.Components[x];
 
-            if (!componentFound) return 1;
+            var result = nativeComponent.CompareTo(remoteComponent);
+            if (result != 0) return result;
         }
 
         return 0;
+    }
+
+    public object Clone()
+    {
+        return new Story
+        {
+            Title = (string) this.Title.Clone(),
+            Components = this.Components
+                            .Select(item => item.Clone())
+                            .Cast<TextComponent>()
+                            .ToList()
+        };
     }
 }

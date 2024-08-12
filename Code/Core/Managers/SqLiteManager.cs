@@ -197,19 +197,28 @@ public class SqLiteManager(string connectionString)
         if (!wasOpen) await Connection.OpenAsync();
 
         var storySql = "UPDATE Story SET Title = @title WHERE Id = @id";
-        var componentSql = "UPDATE TextComponent SET Content = @content WHERE StoryId = @storyId AND Guid = @guid";
+        var removeOldComponentsSql = "DELETE FROM TextComponent WHERE StoryId = @storyId";
+        var componentSql = "INSERT INTO TextComponent (Guid, Content, Type, StoryId) VALUES (@guid, @content, @type, @storyId)";
 
         try
         {
             await using var storyCommand = new SQLiteCommand(storySql, Connection);
+            await using var removeComponentsCommand = new SQLiteCommand(removeOldComponentsSql, Connection);
             await using var componentCommand = new SQLiteCommand(componentSql, Connection);
+            
             storyCommand.Parameters.AddWithValue("@id", story.Id);
             storyCommand.Parameters.AddWithValue("@title", story.Title);
+            
+            removeComponentsCommand.Parameters.AddWithValue("@storyId", story.Id);
+            
             componentCommand.Parameters.AddWithValue("@storyId", story.Id);
             componentCommand.Parameters.Add(new SQLiteParameter("@guid", DbType.String));
             componentCommand.Parameters.Add(new SQLiteParameter("@content", DbType.String));
+            componentCommand.Parameters.Add(new SQLiteParameter("@type", DbType.String));
 
-            await storyCommand.ExecuteNonQueryAsync();
+            var task = storyCommand.ExecuteNonQueryAsync();
+            await removeComponentsCommand.ExecuteNonQueryAsync();
+            await task;
 
             foreach (var component in story.Components)
             {
@@ -219,11 +228,13 @@ public class SqLiteManager(string connectionString)
                 {
                     var textField = (TextField) component;
                     componentCommand.Parameters["@content"].Value = textField.Content;
+                    componentCommand.Parameters["@type"].Value = typeof(TextField).AssemblyQualifiedName;
                 }
                 else if (component.GetType() == typeof(TextOption))
                 {
                     var option = (TextOption) component;
                     componentCommand.Parameters["@content"].Value = string.Join(";", option.Options);
+                    componentCommand.Parameters["@type"].Value = typeof(TextOption).AssemblyQualifiedName;
                 }
 
                 await componentCommand.ExecuteNonQueryAsync();

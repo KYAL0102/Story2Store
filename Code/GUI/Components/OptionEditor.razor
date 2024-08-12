@@ -1,5 +1,6 @@
 ﻿@using GUI.Coordinators
 @using ClassLibrary.Entities
+@inject StoryEditCoordinator StoryEditCoordinator;
 
 <h3>OptionEditor</h3>
 
@@ -12,7 +13,7 @@ else
     <p>Option with Guid @_selectedOption.ToString() selected</p>
     @foreach (var option in _options.Select((value, index) => new { value, index }))
     {
-        <MudTextField T="string" @bind-Value="_options[option.index]" Variant="Variant.Filled" Class="pa-1 ma-1 rounded" 
+        <MudTextField T="string" @bind-Value="_options[option.index]" Variant="Variant.Filled" Class="pa-1 ma-1 rounded" OnKeyUp="OnChange"  
                       Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Delete" OnAdornmentClick="() => OnDeleteTextField(option.index)"/>
     }
     
@@ -24,36 +25,37 @@ else
 }
 
 @code {
-    [Inject]
-    private StoryEditCoordinator? StoryEditCoordinator { get; set; }
-    
     private Guid _selectedOption = Guid.Empty;
     private List<string> _options = [];
+
+    private void OnChange()
+    {
+        StoryEditCoordinator.ChangedCurrentStory();
+    }
     
     protected override void OnInitialized()
     {
-        if (StoryEditCoordinator != null)
+        _selectedOption = StoryEditCoordinator.SelectedOption;
+        StoryEditCoordinator.ObservableProperty.Subscribe(value =>
         {
-            _selectedOption = StoryEditCoordinator.SelectedOption;
-            StoryEditCoordinator.ObservableProperty.Subscribe(value =>
-            {
-                _selectedOption = value;
-                var component = StoryEditCoordinator.CurrentStory.Components.SingleOrDefault(item => item.Guid == _selectedOption);
-                if (component?.GetType() != typeof(TextOption)) return;
-                _options = ((TextOption)component).Options;
-                StateHasChanged();
-            });
-        }
-        else Console.WriteLine("Service is null");
+            _selectedOption = value;
+            var component = StoryEditCoordinator.CurrentStory.Components.SingleOrDefault(item => item.Guid == _selectedOption);
+            if (component?.GetType() != typeof(TextOption)) return;
+            _options = ((TextOption)component).Options;
+            StateHasChanged();
+        });
     }
     
     private void OnDeleteTextField(int idx)
     {
-        if(_options.Count - 1 >= idx) _options.RemoveAt(idx);
+        if (_options.Count - 1 < idx) return;
+        OnChange();
+        _options.RemoveAt(idx);
     }
 
     private void AddTextField()
     {
+        OnChange();
         _options.Add(string.Empty);
     }
 }

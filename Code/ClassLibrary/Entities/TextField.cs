@@ -22,4 +22,13 @@ public class TextField : TextComponent, IComparable<TextField>
         Console.WriteLine(result);
         return result;
     }
+
+    public override object Clone()
+    {
+        return new TextField
+        {
+            Guid = this.Guid,
+            Content = (string) this.Content.Clone()
+        };
+    }
 }

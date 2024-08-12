@@ -37,4 +37,15 @@ public class TextOption : TextComponent, IComparable<TextOption>
 
         return 0;
     }
+
+    public override object Clone()
+    {
+        return new TextOption
+        {
+            Guid = this.Guid,
+            Options = this.Options
+                    .Select(item => (string) item.Clone())
+                    .ToList()
+        };
+    }
 }
