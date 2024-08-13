@@ -1,5 +1,6 @@
 ﻿@using GUI.Coordinators
 @using ClassLibrary.Entities
+@using MudBlazor.Extensions
 @inject StoryEditCoordinator StoryEditCoordinator;
 
 <h3>OptionEditor</h3>
@@ -13,7 +14,7 @@ else
     <p>Option with Guid @_selectedOption.ToString() selected</p>
     @foreach (var option in _options.Select((value, index) => new { value, index }))
     {
-        <MudTextField T="string" @bind-Value="_options[option.index]" Variant="Variant.Filled" Class="pa-1 ma-1 rounded" OnKeyUp="OnChange"  
+        <MudTextField T="string" Value="_options[option.index]" ValueChanged="newValue => OnTextValueChanged(newValue, option.index)" Variant="Variant.Filled" Class="pa-1 ma-1 rounded" 
                       Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Delete" OnAdornmentClick="() => OnDeleteTextField(option.index)"/>
     }
     
@@ -28,8 +29,9 @@ else
     private Guid _selectedOption = Guid.Empty;
     private List<string> _options = [];
 
-    private void OnChange()
+    private void OnTextValueChanged(string newValue, int idx)
     {
+        _options[idx] = newValue;
         StoryEditCoordinator.ChangedCurrentStory();
     }
     
@@ -49,13 +51,13 @@ else
     private void OnDeleteTextField(int idx)
     {
         if (_options.Count - 1 < idx) return;
-        OnChange();
+        StoryEditCoordinator.ChangedCurrentStory();
         _options.RemoveAt(idx);
     }
 
     private void AddTextField()
     {
-        OnChange();
+        StoryEditCoordinator.ChangedCurrentStory();
         _options.Add(string.Empty);
     }
 }

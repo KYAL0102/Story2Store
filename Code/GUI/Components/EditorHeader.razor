@@ -46,6 +46,10 @@
             var id = await StoryService.AddStory(StoryEditCoordinator.CurrentStory);
             StoryEditCoordinator.CurrentStory.Id = id;
         }
+
+        // to update the originalStory in StoryEditCoordinator
+        StoryEditCoordinator.CurrentStory = StoryEditCoordinator.CurrentStory;
+        StoryEditCoordinator.ChangedCurrentStory();
     }
     
     private void OnRunBtnClick()
