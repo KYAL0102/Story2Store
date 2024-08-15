@@ -1,3 +1,4 @@
+using ClassLibrary;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using GUI;
@@ -12,10 +13,12 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient
 {
-    BaseAddress = new Uri("http://localhost:5164")
+    BaseAddress = new Uri($"http://localhost:{GlobalConstants.BackendPort}")
 });
 builder.Services.AddSingleton<StoryEditCoordinator>();
 builder.Services.AddScoped<StoryService>();
 builder.Services.AddMudServices();
 
-await builder.Build().RunAsync();
+var app = builder.Build();
+
+await app.RunAsync();

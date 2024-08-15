@@ -1,4 +1,5 @@
 using System.Data.SQLite;
+using ClassLibrary;
 using ClassLibrary.Converter;
 using Core.Managers;
 
@@ -15,6 +16,12 @@ var connectionStringBuilder = new SQLiteConnectionStringBuilder
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<SqLiteManager>( _ => new SqLiteManager(connectionStringBuilder.ConnectionString));
+
+builder.WebHost.UseKestrel(options =>
+{
+    options.ListenLocalhost(GlobalConstants.BackendPort);
+});
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("corsPolicy", policyBuilder =>
@@ -22,7 +29,7 @@ builder.Services.AddCors(options =>
         policyBuilder
             .AllowAnyHeader()
             .AllowAnyMethod()
-            .AllowAnyOrigin();
+            .WithOrigins($"http://localhost:{GlobalConstants.FrontendPort}");
     });
 });
 builder.Services
